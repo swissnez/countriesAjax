@@ -38,17 +38,29 @@ request.addEventListener("load",function(){
     console.log(data);
 
     const {name} = result[0]; //console.log(result[0].name);
+    const [neighbours] = data.borders;
+   
     // COOKIES!
-    localStorage.setItem("Countries",result);
+    //localStorage.setItem("Countries",result);
 
     renderCountries(data);
+
+    if(!neighbours) return;
+
+    const req = new XMLHttpRequest();
+    req.open("GET",`https://restcountries.eu/rest/v2/alpha/${neighbours}`);
+    req.send();
+    req.addEventListener('load',function(){
+        let data = JSON.parse(this.responseText);
+        renderCountries(data);
+    });
 
 });
 
 };
 
-getCountryDataAndNeighbour("ireland");
-getCountryDataAndNeighbour("iceland");
+// getCountryDataAndNeighbour("ireland");
+// getCountryDataAndNeighbour("iceland");
 getCountryDataAndNeighbour("sweden");
 
 // const postCode = 'nn28uh'
