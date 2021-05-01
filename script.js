@@ -63,7 +63,7 @@ request.addEventListener("load",function(){
 // getCountryDataAndNeighbour("iceland");
 getCountryDataAndNeighbour("sweden");
 
-// const postCode = 'nn28uh'
+// const postCode = ''
 // const postReq = new XMLHttpRequest();
 // postReq.open("GET",`https://api.postcodes.io/postcodes/${postCode}`);
 // postReq.send();
