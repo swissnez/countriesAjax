@@ -1,5 +1,7 @@
 'use strict';
-const getCountryDataAndNeighbour = (country)=>{;
+const getCountryDataAndNeighbour = (country)=>{
+
+
 
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
@@ -10,9 +12,9 @@ request.open('GET',`https://restcountries.eu/rest/v2/name/${country}`);
 request.send();
 
 
-const renderCountries = (data)=> {
+const renderCountries = (data,classname='')=> {
     const html = `
-    <article class="country">
+    <article class="country ${classname}">
       <img class="country__img" src="${data.flag}" />
       <div class="country__data">
         <h3 class="country__name">${data.name}</h3>
@@ -46,22 +48,38 @@ request.addEventListener("load",function(){
     renderCountries(data);
 
     if(!neighbours) return;
-
+    //-----   XHR OLD SCHOOL ------- 
     const req = new XMLHttpRequest();
     req.open("GET",`https://restcountries.eu/rest/v2/alpha/${neighbours}`);
     req.send();
     req.addEventListener('load',function(){
         let data = JSON.parse(this.responseText);
-        renderCountries(data);
+        renderCountries(data,'neighbour'); // Second argument is "classname e.g .neighbour"
     });
 
 });
 
+
+const getCountryData = function (country) {
+    fetch(`https://restcountries.eu/rest/v2/name/${country}`)
+    .then((response)=> response.json())
+        .then((data)=> renderCountries(data[0]));
+}("netherlands");
+
+//getCountryData("iceland");
 };
+
+
+
+
+
+
+
 
 // getCountryDataAndNeighbour("ireland");
 // getCountryDataAndNeighbour("iceland");
-getCountryDataAndNeighbour("sweden");
+getCountryDataAndNeighbour("canada");
+
 
 // const postCode = ''
 // const postReq = new XMLHttpRequest();
@@ -73,4 +91,3 @@ getCountryDataAndNeighbour("sweden");
 //     let res = JSON.parse(this.responseText);
 //     const {latitude,longitude} = res.result;
 //     console.log(latitude);
-// });
