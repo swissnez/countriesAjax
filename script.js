@@ -6,10 +6,7 @@ const getCountryDataAndNeighbour = (country)=>{
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
-const request = new XMLHttpRequest(); // Old school AJAX call 
 
-request.open('GET',`https://restcountries.eu/rest/v2/name/${country}`);
-request.send();
 
 
 const renderCountries = (data,classname='')=> {
@@ -31,36 +28,42 @@ const renderCountries = (data,classname='')=> {
 };
 
 const renderErr = (err)=>{
-    countriesContainer.insertAdjacentText("beforeend",err);
+    console.log(err);
+    countriesContainer.insertAdjacentText("beforeend",`Ooopps!!! ${err}`);
 };
 
+const XmlReq = ()=>{
+const request = new XMLHttpRequest(); // Old school AJAX call 
 
+request.open('GET',`https://restcountries.eu/rest/v2/name/${country}`);
+request.send();
 
-request.addEventListener("load",function(){
+    request.addEventListener("load",function(){
 
-    let result = JSON.parse(this.responseText);
-    let [data] = JSON.parse(this.responseText);
-    console.log(data);
+        let result = JSON.parse(this.responseText);
+        let [data] = JSON.parse(this.responseText);
+        console.log(data);
 
-    const {name} = result[0]; //console.log(result[0].name);
-    const [neighbours] = data.borders;
-   
-    // COOKIES!
-    //localStorage.setItem("Countries",result);
+        const {name} = result[0]; //console.log(result[0].name);
+        const [neighbours] = data.borders;
+    
+        // COOKIES!
+        //localStorage.setItem("Countries",result);
 
-    renderCountries(data);
+        renderCountries(data);
 
-    if(!neighbours) return;
-    //-----   XHR OLD SCHOOL ------- 
-    const req = new XMLHttpRequest();
-    req.open("GET",`https://restcountries.eu/rest/v2/alpha/${neighbours}`);
-    req.send();
-    req.addEventListener('load',function(){
-        let data = JSON.parse(this.responseText);
-        renderCountries(data,'neighbour'); // Second argument is "classname e.g .neighbour"
+        if(!neighbours) return;
+        //-----   XHR OLD SCHOOL ------- 
+        const req = new XMLHttpRequest();
+        req.open("GET",`https://restcountries.eu/rest/v2/alpha/${neighbours}`);
+        req.send();
+        req.addEventListener('load',function(){
+            let data = JSON.parse(this.responseText);
+            renderCountries(data,'neighbour'); // Second argument is "classname e.g .neighbour"
+        });
+
     });
-
-});
+};
 
 btn.addEventListener('click',()=> getCountryData("sweden"));
 
@@ -77,9 +80,9 @@ const getCountryData = function (country) {
         })
         .then(response=>response.json())
         .then(dataNeighbour=>renderCountries(dataNeighbour,"neighbour"))
-        .catch(err=>{
-            console.error(err); 
-            renderErr(err);
+        .catch(err=>renderErr(err))
+        .finally(()=>{
+            countriesContainer.style.opacity = 1;
         });
 };
 
