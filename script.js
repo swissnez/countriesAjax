@@ -2,7 +2,7 @@
 const getCountryDataAndNeighbour = (country)=>{
 
 
-
+// DOM selectors
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
@@ -26,10 +26,13 @@ const renderCountries = (data,classname='')=> {
     </article>
     `;
 
-    countriesContainer.insertAdjacentHTML("beforeend",html);
+    countriesContainer.insertAdjacentHTML("beforeend",html); //document.querySelector('.countries');
     countriesContainer.style.opacity = 1;
 };
 
+const renderErr = (err)=>{
+    countriesContainer.insertAdjacentText("beforeend",err);
+};
 
 
 
@@ -59,26 +62,36 @@ request.addEventListener("load",function(){
 
 });
 
+btn.addEventListener('click',()=> getCountryData("sweden"));
+
+
 
 const getCountryData = function (country) {
     fetch(`https://restcountries.eu/rest/v2/name/${country}`)
-    .then((response)=> response.json())
-        .then((data)=> renderCountries(data[0]));
-}("netherlands");
-
-//getCountryData("iceland");
+    .then(response=> response.json())
+        .then(data=> {
+            renderCountries(data[0]);
+            const neighbour = data[0].borders[0];
+            if(!neighbour) return;
+            return fetch(`https://restcountries.eu/rest/v2/alpha/${neighbour}`);
+        })
+        .then(response=>response.json())
+        .then(dataNeighbour=>renderCountries(dataNeighbour,"neighbour"))
+        .catch(err=>{
+            console.error(err); 
+            renderErr(err);
+        });
 };
 
 
-
-
+};
 
 
 
 
 // getCountryDataAndNeighbour("ireland");
 // getCountryDataAndNeighbour("iceland");
-getCountryDataAndNeighbour("canada");
+getCountryDataAndNeighbour("switzerland");
 
 
 // const postCode = ''
