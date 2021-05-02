@@ -1,10 +1,11 @@
 'use strict';
-const getCountryDataAndNeighbour = (country)=>{
+const getCountryDataAndNeighbour = country =>{
 
 
 // DOM selectors
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
+const heading = document.querySelector('.heading');
 
 
 
@@ -25,18 +26,19 @@ const renderCountries = (data,classname='')=> {
 
     countriesContainer.insertAdjacentHTML("beforeend",html); //document.querySelector('.countries');
     countriesContainer.style.opacity = 1;
+    heading.textContent = data.name;
 };
 
 const renderErr = (err)=>{
     console.log(err);
-    countriesContainer.insertAdjacentText("beforeend",`Ooopps!!! ${err}`);
+    countriesContainer.insertAdjacentText("beforeend",`Ooopps!!!😆 ${err}`);
 };
 
 const XmlReq = ()=>{
-const request = new XMLHttpRequest(); // Old school AJAX call 
+    const request = new XMLHttpRequest(); // Old school AJAX call 
 
-request.open('GET',`https://restcountries.eu/rest/v2/name/${country}`);
-request.send();
+    request.open('GET',`https://restcountries.eu/rest/v2/name/${country}`);
+    request.send();
 
     request.addEventListener("load",function(){
 
@@ -65,17 +67,21 @@ request.send();
     });
 };
 
-btn.addEventListener('click',()=> getCountryData("sweden"));
+btn.addEventListener('click',()=> getCountryData(country));
 
 
 
 const getCountryData = function (country) {
     fetch(`https://restcountries.eu/rest/v2/name/${country}`)
-    .then(response=> response.json())
+    .then(response=> {
+        console.log(response);
+        if(response.status>200 || !response.ok) throw new Error(`Country not found ${response.status}`);
+        return response.json();
+    })
         .then(data=> {
             renderCountries(data[0]);
             const neighbour = data[0].borders[0];
-            if(!neighbour) return;
+            if(!neighbour) return; // Exit if there's no neighbour
             return fetch(`https://restcountries.eu/rest/v2/alpha/${neighbour}`);
         })
         .then(response=>response.json())
@@ -94,7 +100,7 @@ const getCountryData = function (country) {
 
 // getCountryDataAndNeighbour("ireland");
 // getCountryDataAndNeighbour("iceland");
-getCountryDataAndNeighbour("switzerland");
+getCountryDataAndNeighbour('switzerland');
 
 
 // const postCode = ''
