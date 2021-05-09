@@ -1,0 +1,23 @@
+{
+  "name": "16",
+  "version": "1.0.0",
+  "description": "",
+  "main": "geocodeChallenge.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swissnez/countriesAjax.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/swissnez/countriesAjax/issues"
+  },
+  "homepage": "https://github.com/swissnez/countriesAjax#readme",
+  "dependencies": {
+    "@material-ui/core": "^4.11.4"
+  }
+}

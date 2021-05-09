@@ -30,7 +30,7 @@ const renderCountries = (data,classname='')=> {
 };
 
 const renderErr = (err)=>{
-    console.log(err);
+    console.error(err);
     countriesContainer.insertAdjacentText("beforeend",`Ooopps!!!😆 ${err}`);
 };
 
@@ -69,7 +69,7 @@ const XmlReq = ()=>{
 
 btn.addEventListener('click',()=> getCountryData(country));
 
-
+// *** Fetch method *** 
 
 const getCountryData = function (country) {
     fetch(`https://restcountries.eu/rest/v2/name/${country}`)
